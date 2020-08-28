@@ -411,6 +411,26 @@ def run(cfg, tmpdir, adminuser, sshprivkey, sshpubkey, fqdn):
     jb = cfg.get("install_from")
     install_steps = [{ "script": "install_node_setup.sh" }] + cfg.get("install", [])
     if jb:
+        # Check to see if the jb is reachable with ssh
+        for icnt in [ 1, 2, 3, 4, 5]: 
+            cmd = [
+                "ssh", 
+                "-o", "StrictHostKeyChecking=no",
+                "-o", "UserKnownHostsFile=/dev/null",
+                "-i", sshprivkey,
+                f"{adminuser}@{fqdn}",
+                "hostname"
+            ] 
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if res.returncode != 0:
+                time.sleep(30)
+                if icnt == 5:
+                    log.error("invalid returncode"+_make_subprocess_error_string(res))
+                    sys.exit(1)
+            else:
+                log.info("Able to connect to ssh")
+                break
+
         log.debug("rsyncing install files")
         __rsync(sshprivkey, tmpdir, f"{adminuser}@{fqdn}:.")
 
