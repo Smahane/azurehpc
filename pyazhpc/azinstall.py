@@ -424,6 +424,7 @@ def run(cfg, tmpdir, adminuser, sshprivkey, sshpubkey, fqdn):
             res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if res.returncode != 0:
                 time.sleep(30)
+                log.info("unable to connect to ssh. will try again in 30 seconds")
                 if icnt == 5:
                     log.error("invalid returncode"+_make_subprocess_error_string(res))
                     sys.exit(1)
