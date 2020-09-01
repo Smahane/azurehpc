@@ -134,7 +134,7 @@ def deploy(resource_group, arm_template):
             "--resource-group", resource_group,
             "--template-file", arm_template,
             "--name", deployname,
-            "--no-wait"
+            "--no-wait", "--debug"
     ]
     log.debug(" ".join(cmd))
     res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
