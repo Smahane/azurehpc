@@ -14,8 +14,11 @@
         "location": "<NOT-SET>",
         "resource_group": "<NOT-SET>",
         "vm_type": "<NOT-SET>",
-        "image": "OpenLogic:CentOS:7_7-gen2:latest"
-    },
+        "image": "OpenLogic:CentOS:7_7-gen2:latest",
+	"image_name": "gpu-gold-image-crt",
+	"image_resource_group": "img-{{variables.uuid}}",
+	"uuid": "12345678"
+      },
     "resources": {
         "jumpbox": {
             "type": "vm",
@@ -35,7 +38,8 @@
             "subnet": "admin",
             "tags": [
                 "nvidia",
-                "disable-selinux"
+                "disable-selinux",
+		"deprovision"
             ]
         }
     },
@@ -76,6 +80,21 @@
             "script": "check_gpu.sh",
             "tag": "nvidia",
             "sudo": true
+        },
+        {	
+            "script": "deprovision.sh",
+            "tag": "deprovision",
+            "sudo": true
+        },
+        {
+            "type": "local_script",
+            "script": "create_image.sh",
+            "args": [
+               "variables.resource_group",
+               "gpumaster",
+               "variables.image_name",
+               "variables.image_resource_group"
+            ]
         }
     ]
 }

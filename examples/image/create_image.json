@@ -23,28 +23,6 @@
             "compute": "10.2.4.0/22"
         }
     },
-    "resources": {
-        "builder": {
-            "type": "vm",
-            "vm_type": "Standard_D4s_v3",
-            "public_ip": true,
-            "image": "variables.image",
-            "subnet": "admin",
-            "tags": []
-        },
-        "master": {
-            "type": "vm",
-            "vm_type": "variables.vm_type",
-            "public_ip": false,
-            "image": "variables.hpc_image",
-            "subnet": "compute",
-            "tags": [
-                "cndefault",
-                "disable-selinux",
-                "deprovision"
-            ]
-        }
-    },
     "install": [
         {
             "script": "disable-selinux.sh",
